@@ -1,0 +1,38 @@
+name: Auto Update Exchange Rates
+
+on:
+  schedule:
+    # 每天北京时间 10:15 运行 (UTC 2:15)
+    # 建议避开整点，GitHub 的整点任务经常排队严重
+    - cron: '15 2 * * *'
+  workflow_dispatch: # 极其重要：这允许你在 GitHub 页面上手动点按钮测试
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # 必须赋予写入权限，否则无法 push 结果
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v3
+
+      - name: 设置 Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: 运行更新脚本
+        run: python update_rates.py
+
+      - name: 提交并推送更改
+        run: |
+          # 使用机器人身份，保护你的个人隐私
+          git config --local user.email "41898282+github-actions[bot]@://github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # 只在有变动时提交，防止产生无意义的 log
+          git add rates.json history.json
+          git commit -m "chore: auto sync exchange rates $(date +'%Y-%m-%d %H:%M')" || exit 0
+          git push
+
