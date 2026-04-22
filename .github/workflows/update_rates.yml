@@ -2,20 +2,17 @@ name: Auto Update Exchange Rates
 
 on:
   schedule:
-    # 第一次：泰国时间 00:15 (UTC 16:15) 
-    # 作用：只要跨过 0 点，立刻生成今天的日期标题，哪怕汇率还没动
+    # 第一次：泰国时间 00:15 (UTC 16:15)
     - cron: '15 16 * * *'
-    
-    # 第二次：泰国时间 10:15 (UTC 2:15) 
-    # 作用：获取亚洲市场开盘后的第一手活跃汇率，覆盖 0 点的死价
+    # 第二次：泰国时间 10:15 (UTC 2:15)
     - cron: '15 2 * * *'
-  workflow_dispatch: # 极其重要：这允许你在 GitHub 页面上手动点按钮测试
+  workflow_dispatch: # 手动触发按钮
 
 jobs:
   update:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # 必须赋予写入权限，否则无法 push 结果
+      contents: write
 
     steps:
       - name: 检出代码
@@ -26,16 +23,17 @@ jobs:
         with:
           python-version: '3.9'
 
+      - name: 安装依赖
+        run: pip install requests
+
       - name: 运行更新脚本
         run: python update_rates.py
 
       - name: 提交并推送更改
         run: |
-          # 使用机器人身份，保护你的个人隐私
           git config --local user.email "41898282+github-actions[bot]@://github.com"
           git config --local user.name "github-actions[bot]"
           
-          # 只在有变动时提交，防止产生无意义的 log
           git add rates.json history.json
           git commit -m "chore: auto sync exchange rates $(date +'%Y-%m-%d %H:%M')" || exit 0
           git push
