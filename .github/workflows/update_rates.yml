@@ -26,7 +26,7 @@ jobs:
           python-version: '3.9'
 
       - name: 运行同步脚本
-        run: python sync_history.py
+        run: python update_rates.py
 
       - name: 提交并推送更改
         run: |
