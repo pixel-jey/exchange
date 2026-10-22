@@ -1513,5 +1513,15 @@
         "USD_MYR": 4.12,
         "USD_SGD": 1.28,
         "USD_IDR": 17978.5
+    },
+    "2026-10-23": {
+        "update_time": "03:09:36",
+        "USD_THB": 33.72,
+        "USD_CNY": 6.71,
+        "USD_PHP": 63.04,
+        "USD_VND": 25918.0,
+        "USD_MYR": 4.12,
+        "USD_SGD": 1.28,
+        "USD_IDR": 17978.5
     }
 }
