@@ -23,7 +23,7 @@ jobs:
       - name: 设置 Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.12'
 
       - name: 运行同步脚本
         run: python update_rates.py
